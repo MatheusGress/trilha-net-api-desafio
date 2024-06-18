@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TrilhaApiDesafio.Context;
 using TrilhaApiDesafio.Models;
 
@@ -18,25 +19,29 @@ namespace TrilhaApiDesafio.Controllers
         [HttpGet("{id}")]
         public IActionResult ObterPorId(int id)
         {
-            // TODO: Buscar o Id no banco utilizando o EF
-            // TODO: Validar o tipo de retorno. Se não encontrar a tarefa, retornar NotFound,
-            // caso contrário retornar OK com a tarefa encontrada
-            return Ok();
+            var tarefa = _context.Tarefas.Find(id);
+
+            if (tarefa == null)
+            {
+                return NotFound(new { Message = "Tarefa não encontrada" });
+            }
+            return Ok(tarefa);
         }
 
         [HttpGet("ObterTodos")]
         public IActionResult ObterTodos()
         {
-            // TODO: Buscar todas as tarefas no banco utilizando o EF
+            var tarefa = _context.Tarefas.ToList();
+
             return Ok();
         }
 
         [HttpGet("ObterPorTitulo")]
         public IActionResult ObterPorTitulo(string titulo)
         {
-            // TODO: Buscar  as tarefas no banco utilizando o EF, que contenha o titulo recebido por parâmetro
-            // Dica: Usar como exemplo o endpoint ObterPorData
-            return Ok();
+            var tarefa = _context.Tarefas.Where(x => x.Titulo == titulo).ToList();
+    
+            return Ok(tarefa);
         }
 
         [HttpGet("ObterPorData")]
